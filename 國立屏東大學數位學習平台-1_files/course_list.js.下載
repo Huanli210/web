@@ -1,0 +1,528 @@
+// 調整每個課程的圖片高度
+function setItemCoverHeight  () {
+    var $list       = $( '.lcms-items' ),
+        $items      = $list.find( '.lcms-item .cover' );
+    $items.css('height', Math.floor($items.width()*540/960));
+    /*
+    $items.css( 'height', 'auto' );
+ 
+    var perRow = Math.floor( $list.width() / $items.width() );
+    if( perRow == null || perRow < 2 ) return true;
+
+    for( var i = 0, j = $items.length; i < j; i += perRow )
+    {
+        var maxHeight   = 0,
+            $row        = $items.slice( i, i + perRow );
+
+        $row.each( function()
+        {
+            var itemHeight = parseInt( $( this ).outerHeight() );
+            if ( itemHeight > maxHeight ) maxHeight = itemHeight;
+        });
+        $row.css( 'height', maxHeight );
+    }
+    */
+}
+
+// custom 檢查是否為首頁
+var isFromIndex = (document.URL.indexOf('/mooc/index.php') >= 0 ? true : false); 
+
+function getCourseList(action, id, page){
+    if (typeof forMobile == 'undefined') {
+        // forMobile = (forMobile != true) ? false : forMobile;
+        forMobile = false;
+    }
+    
+    //取一頁幾筆
+    if (forMobile) {
+        win = $(document).width();
+        num = 2;
+    } else {
+        win = $('body>div>header>.title>.narrow').width();
+        num = Math.floor(win / 252);
+    }
+    per_page = num * 5;
+    
+    // custom 首頁最多只顯示N行 
+    if(isFromIndex == true) per_page = num * 1;
+
+    if(typeof page != 'undefined') {
+        url = appRoot + '/mooc/controllers/course_ajax.php?page='+page;
+    } else {
+        url = appRoot + '/mooc/controllers/course_ajax.php';
+    }
+
+    // 取課程資料
+    $.ajax({
+        'type': 'POST',
+        'dataType': 'json',
+        'data': {'action' : action, 'id' : id, 'perpage' : per_page},
+        'url': url,
+        'success': function (response) {
+            
+            // custom 固定查看更多按鈕
+            var fixButton = "<div class='narrow'>"+
+                                "<button type='button' class='btn btn-primary btn-large btn-danger btnExplore btn-full' style='position: relative; top: -11px;' onclick='window.top.location=\"/mooc/explorer.php\"'>"+
+                                    MSGSHOWMORECOURSE+
+                                "</button>"+
+                            "</div>";
+            rtn  = json2array(response);
+            if (rtn[0] == null) {
+                $('#mainContent .lcms-items').html('<li><div class="message">' + nocourses + '</div></li>');
+
+                align = 'center';
+                if ((location.pathname === '/mooc/explorer.php') || (location.pathname === '/mooc/explorer_video.php')) {
+                    align = 'left';
+                }
+                // 沒資料時不顯示查看更多按鈕
+                $('.lcms-nav-bottom').html('');
+                // custom 沒資料也要固定顯示查看更多
+                if (isFromIndex == true) {
+                    $('.lcms-nav-bottom').html(fixButton);
+                }
+
+                var options = {
+                    autoResize: true, // This will auto-update the layout when the browser window is resized.
+                    container: $('#main'), // Optional, used for some extra CSS styling
+                    offset: 2, // Optional, the distance between grid items
+                    itemWidth: 250, // Optional, the width of a grid item
+                    align: align
+                };
+                if (!forMobile) {
+                    var handler = $('#main #tiles li');
+                    handler.wookmark(options);
+                }
+                $('#main').css('height', 20);
+            } else {
+                data = json2array(rtn[0]);
+                html = '';
+
+                var fbFlag = (socialShare.indexOf("FB") === -1) ? "display: none;":"",
+                    plkFlag = (socialShare.indexOf("PLURK") === -1) ? "display: none;":"",
+                    twFlag = (socialShare.indexOf("TWITTER") === -1) ? "display: none;":"",
+                    lnFlag = (socialShare.indexOf("LINE") === -1) ? "display: none;":"",
+                    wctFlag = (socialShare.indexOf("WECHAT") === -1) ? "display: none;":"";
+                var dateTitle = MSGopeningperiod + "：" ;
+                var $lcmsItems = $('#mainContent .lcms-items');
+                if (forMobile) {
+                    var liCls = 'class="col-xs-6 col-sm-4 col-md-3 col-lg-2 item-frame"';
+                    dateTitle = '';
+                }
+                for (i = 0; i < data.length; i = i + 1) {
+
+
+                    if (data[i].isClassing === true) {
+                        isClassing = 'font-red';
+                    } else {
+                        isClassing = 'font-gray';
+                    }
+                    var sid = "";
+                    var sidurl = "";
+                    var sidPic = "";
+                    if (cursch != data[i].sid) {
+                        sid = data[i].sid ;
+                        sidurl = "/" + data[i].sid ;
+                        sidPic = "&sId=" + data[i].spic;
+                    }
+                    var coursePicPath = '';
+                    if (data[i].hasCoursePic == 'Y') {
+                        coursePicPath = appRoot + "/lib/app_show_course_picture.php?courseId=" + data[i].cpic + sidPic;
+                    }else{
+                        coursePicPath = "/theme/default/app/default-course-picture.jpg";
+                    }
+                    
+                    html = html +
+                    "<li "+liCls+">" +
+                    "<div class='lcms-item'>" +
+                    "<div class='cover'><a href='" + appRoot + "/info/" + data[i].cid + sidurl + "'><img width='236' height='133' src='" + coursePicPath + "'></a></div>" +
+                    "<div class='title'>" +
+                    "<div class='lcms-td-limit-210' title='" + data[i].caption + "'>" + data[i].caption + "</div>" +
+                    "</div>" +
+                    "<div class='author'>" +
+                    "<div class='pic'>" +
+                    "<img src='" + appRoot + "/co_showuserpic.php?a=" + data[i].teacherPic + "'/>" +
+                    "</div>" +
+                    "<div class='user'>" +
+                    "<div class='name' style='width:196px;'>" +
+                    "<div class='lcms-table-td-text_gray lcms-td-limit-140' title='" + data[i].teacher + "'>" + data[i].teacher + "</div>" +
+                    "</div>" +
+                    "</div>" +
+                    "<div class='push' data-id='"  + data[i].cid + "' data-id2='"  + sid + "' data-description='"  + data[i].content + "'></div>" +
+                    "</div>" +
+                    "<div class='share' style='display: none;'>" +
+                    "<div class='pic' style='" + fbFlag + "'>" +
+                    "<a href='javascript: void(window.open(\"http://www.facebook.com/share.php?u=\".concat(encodeURIComponent(\"" + appRoot + "/info/"  + data[i].cid + sidurl + "?lang=" + nowlang + "\"))));'><div class='fb'></div></a>" +
+                    "</div>" +
+                    "<div class='pic' style='" + plkFlag + "'>" +
+                    "<a href='javascript: void(window.open(\"http://www.plurk.com/?qualifier=shares&status=\".concat(encodeURIComponent(\"" + data[i].caption + "\")).concat(\" \").concat(encodeURIComponent(\"" + appRoot + "/info/"  + data[i].cid + sidurl + "?lang=" + nowlang + "\"))));'><div class='plk'></div></a>" +
+                    "</div>" +
+                    "<div class='pic' style='" + twFlag + "'>" +
+                    "<a href='javascript: void(window.open(\"http://twitter.com/home/?status=\".concat(encodeURIComponent(\"" + data[i].caption + "\")) .concat(\" \").concat(encodeURIComponent(\"" + appRoot + "/info/"  + data[i].cid + sidurl + "?lang=" + nowlang + "\"))));'><div class='tw'></div></a>" +
+                    "</div>" +
+                    "<div class='pic' style='" + lnFlag + "'>" +
+                    "<a id='share-ln-"  + data[i].cid + "' href='#inline-ln-"  + data[i].cid + "' title='" + note + "'><div class='ln'></div></a>" +
+                    "</div>" +
+                    "<div class='pic' style='" + wctFlag + "'>" +
+                    "<a id='share-wct-"  + data[i].cid + "' data-fancybox-type='iframe' href='" + data[i].qrcode_url + "' title='" + wechatsharenote + "'><div class='wct'></div></a>" + 
+                    //"<a id='share-wct-"  + data[i].cid + "' href='#inline-wct-"  + data[i].cid + "' title='" + wechatsharenote + "'><div class='wct'></div></a>" +
+                    "</div>" +
+                    "</div>" +
+                    "<div class='info " + isClassing + "'>" +
+                    "<i class='icon-lcms-classIng'></i>"+ dateTitle + data[i].classPeriod +
+                    "</div>" +
+                    "<div id='inline-ln-"  + data[i].cid + "' class='inline-ln'>" +
+                    "<form class='well'>" +
+                    "<div>" + linesharenote + "</div>" +
+                    "</form>" +
+                    "</div>" +
+                    //"<div style='width: auto; height: auto; overflow: auto; position: relative;'>" +
+                    //"<div id='inline-wct-"  + data[i].cid + "' class='inline-wct'>" +
+                    //"<img src='/lib/phpqrcode/generate.php?size=10&data=" + appRoot + "/info/"  + data[i].cid + sidurl + "?lang=" + nowlang + "&choe=UTF-8'/>" +
+                    //"</div>" +
+                    //"</div>" +
+                    "</div>" +
+                    "</li>";
+                }
+                if(typeof page != 'undefined') {
+                    $lcmsItems.append(html);
+                } else {
+                    $lcmsItems.html(html);
+                }
+
+                if (forMobile) {
+                    $lcmsItems.addClass("row");
+                    setItemCoverHeight();
+                    /*
+                    $lcmsItems.find('.lcms-item .cover img').on( 'load', function ()  {
+                        setItemCoverHeight();
+                    });
+                    */
+                }
+
+
+                if(typeof rtn[1] != 'undefined' && rtn[1].show === true) {
+                    if (forMobile) {
+                        button = "<div class='narrow'>"+
+                                    "<button type='button' class='btn btn-primary btn-large btn-pink btn-full' onclick='this.style.display=\"none\";getCourseList(\""+action+"\",\""+id+"\",\""+rtn[1].page+"\", true);'>"+
+                                        '<div class="glyphicon glyphicon-menu-down" style="color: white; display: block;"></div>' +
+                                        MSGSHOWMORECOURSE+
+                                    "</button>"+
+                                "</div>";                        
+                    } else {
+                        if (isFromIndex == true) {
+                            button = fixButton;
+                        }
+                        else {
+                            button = "<div class='narrow'>"+
+                                        "<button type='button' class='btn btn-primary btn-large btn-danger btnExplore btn-full' style='position: relative; top: -11px;' onclick='this.style.display=\"none\";getCourseList(\""+action+"\",\""+id+"\",\""+rtn[1].page+"\");'>"+
+                                            MSGSHOWMORECOURSE+
+                                        "</button>"+
+                                    "</div>";
+                        }
+                    }
+                    $('.lcms-nav-bottom').html(button);
+                } else {
+                        if (isFromIndex == true) {
+                            $('.lcms-nav-bottom').html(fixButton);
+                        }
+                        else {
+                            $('.lcms-nav-bottom').html('');
+                        }
+                }
+
+                // 調整版面
+                align = 'center';
+                if ((location.pathname === '/mooc/explorer.php') || (location.pathname === '/mooc/explorer_video.php')) {
+                    align = 'left';
+                }
+
+                var options = {
+                    autoResize: true, // This will auto-update the layout when the browser window is resized.
+                    container: $('#main'), // Optional, used for some extra CSS styling
+                    offset: 2, // Optional, the distance between grid items
+                    itemWidth: 250, // Optional, the width of a grid item
+                    align: align
+                };
+                if (!forMobile) {
+                    var handler = $('#main #tiles li');
+                    handler.wookmark(options);
+                }
+
+                // 社群分享
+                // 點選課程WECHAT圖示
+                $('.lcms-item a[id^=share-wct-],.qrcode a[id^=share-wct-]').fancybox({
+//                    'titlePosition': 'inline',
+//                    'transitionIn': 'none',
+//                    'transitionOut': 'none',
+//                    helpers : {
+//                        overlay : {
+//                            locked : false
+//                        }
+//                    }
+                    maxWidth    : 800,
+                    maxHeight    : 600,
+                    fitToView    : false,
+                    width    : 400,
+                    height    : 400,
+                    autoSize    : false,
+                    closeClick    : false,
+                    openEffect    : 'none',
+                    closeEffect    : 'none'
+                });
+
+                // 點選課程LINE分享圖示
+                var lineShare = function(){
+                    // 判斷式否為觸控裝置
+                    var touchable = 'createTouch' in document;
+                    if (touchable === false) {
+                        $('a[id^=share-ln-]').fancybox({
+                            'titlePosition': 'inline',
+                            'transitionIn': 'none',
+                            'transitionOut': 'none',
+                            helpers : {
+                                overlay : {
+                                    locked : false
+                                }
+                            }
+                        });
+                    } else {
+                        var addUrl = '';
+                        var parentItem = $(this).parent().parent().parent().parent();
+                        var title = parentItem.find('.title>div').text();
+                        var pushdiv = parentItem.find('.author>.push');
+                        var description = pushdiv.data('description');
+                        if (null != pushdiv.data('id2')) {
+                            var addUrl = '/' + pushdiv.data('id2');
+                        }
+                        var url = title + '%0D%0A' + description + '%0D%0A' + appRoot + '/info/' + pushdiv.data('id') + addUrl + '?lang=' + nowlang;
+                        top.location.href = 'http://line.naver.jp/R/msg/text/?' + url;
+                    }
+                }
+
+                $('.lcms-item .ln,.qrcode .ln').click(lineShare);
+            }
+        },
+        'error': function () {
+            if (window.console) {
+                console.log('Ajax Error!');
+            }
+        }
+    });
+}
+
+function getVideoList(action, id, page){
+    forMobile = false;
+    win = $('body>div>header>.title>.narrow').width();
+    num = Math.floor(win / 252);
+    
+    per_page = num * 5;
+    
+    // custom 首頁最多只顯示N行 
+    if(isFromIndex == true) per_page = num * 1;
+
+    if(typeof page != 'undefined') {
+        url = appRoot + '/mooc/controllers/course_ajax.php?page='+page;
+    } else {
+        url = appRoot + '/mooc/controllers/course_ajax.php';
+    }
+
+    // 取課程資料
+    $.ajax({
+        'type': 'POST',
+        'dataType': 'json',
+        'data': {'action' : action, 'id' : id, 'perpage' : per_page},
+        'url': url,
+        'success': function (response) {
+
+            // custom 固定查看更多按鈕
+            var fixButton = "<div class='narrow'>"+
+                                "<button type='button' class='btn btn-primary btn-large btn-danger btnExplore btn-full' style='position: relative; top: -11px;' onclick='window.top.location=\"/mooc/explorer_video.php\"'>"+
+                                    MSGSHOWMORECOURSE+
+                                "</button>"+
+                            "</div>";
+        
+            data  = json2array(response);
+
+            if (data.length == 0) {
+                $('#mainVideoContent .lcms-items').html('<li><div class="message">' + novideos + '</div></li>');
+
+                align = 'center';
+                if ((location.pathname === '/mooc/explorer.php') || (location.pathname === '/mooc/explorer_video.php')) {
+                    align = 'left';
+                }
+                // 沒資料時不顯示查看更多按鈕
+                $('.lcms-nav-bottom').html('');
+                // custom 沒資料也要固定顯示查看更多
+                if (isFromIndex == true) {
+                    $('.lcms-nav-bottom-video').html(fixButton);
+                }
+                
+                var options = {
+                    autoResize: true, // This will auto-update the layout when the browser window is resized.
+                    container: $('#mainVideo'), // Optional, used for some extra CSS styling
+                    offset: 2, // Optional, the distance between grid items
+                    itemWidth: 250, // Optional, the width of a grid item
+                    align: align
+                };
+                if (!forMobile) {
+                    var handler = $('#mainVideo #tiles li');
+                    handler.wookmark(options);
+                }
+
+            } else {
+
+                html = '';
+
+                var fbFlag = (socialShare.indexOf("FB") === -1) ? "display: none;":"",
+                    plkFlag = (socialShare.indexOf("PLURK") === -1) ? "display: none;":"",
+                    twFlag = (socialShare.indexOf("TWITTER") === -1) ? "display: none;":"",
+                    lnFlag = (socialShare.indexOf("LINE") === -1) ? "display: none;":"",
+                    wctFlag = (socialShare.indexOf("WECHAT") === -1) ? "display: none;":"";
+                var video_dateTitle = MSGvideo_openingperiod + "：" ;
+                var $lcmsItems = $('#mainVideoContent .lcms-items');
+
+                for (i = 0; i < data.length; i = i + 1) {
+                    var sid = "";
+                    var sidurl = "";
+                    var sidPic = "";
+                    if (cursch != data[i].sid) {
+                        sid = data[i].sid ;
+                        sidurl = "/" + data[i].sid ;
+                        sidPic = "&sId=" + data[i].spic;
+                    }
+
+                    var videoPicPath = appRoot + "/base/10001/door/" + data[i].img_path;
+          var path = (data[i].video_path != '') ? "file=/base/10001/door/" + data[i].video_path : "video=" + data[i].youtube_path + "&vid=" + data[i].video_id;
+          
+                    html = html +
+                    "<li>" +
+                    "<div class='lcms-item'>" +
+                    "<div class='cover'><a class='videoPlayerLink' href='/learn/path/player.php?" + path + "' target='_blank'><img width='236' height='133' src='" + videoPicPath + "'></a></div>" +
+                    "<div class='title'>" +
+                    "<div class='lcms-td-limit-210' title='" + data[i].name + "'>" + data[i].name + "</div>" +
+                    "</div>" +
+                    /** Custom(B) By Steve -- 增加「觀看次數」文字 20161019 **/
+                    "<div class='author' style=\"height:3.8em;min-height:3.8em;\">" +
+                    /** Custom(E) By Steve **/
+                    "<div class='pic'>" +
+                    "<img src='" + appRoot + "/co_showuserpic.php?a=" + data[i].teacherPic + "'/>" +
+                    "</div>" +
+                    "<div class='user'>" +
+                    /** Custom(B) By Steve -- 增加「觀看次數」文字 20161019 **/
+                    "<div class='name' style='width:196px;'>" +
+                        "<div class='lcms-table-td-text_gray lcms-td-limit-140' title='" + data[i].author + "'>" +
+                            //MSG_video_author + data[i].author + '<br />' +
+                            MSG_video_length + data[i].video_length + '<br />' +
+                            MSG_view_times + '<span id="view_times_'+data[i].video_id+'">' +data[i].view_times + '</span>' +
+                        "</div>" +
+                    "</div>" +
+                    /** Custom(E) By Steve **/
+                    "</div>" +
+
+                    // "<div class='push' data-id='"  + data[i].cid + "' data-id2='"  + sid + "' data-description='"  + data[i].content + "'></div>" +
+                    "</div>" +
+                    /** Custom(B) By Steve -- 移除影片分享功能 20161019 **/
+                    // "<div class='share' style='display: none;'>" +
+                    // "<div class='pic' style='" + fbFlag + "'>" +
+                    // "<a href='javascript: void(window.open(\"http://www.facebook.com/share.php?u=\".concat(encodeURIComponent(\"" + appRoot + "/info/"  + data[i].cid + sidurl + "?lang=" + nowlang + "\"))));'><div class='fb'></div></a>" +
+                    // "</div>" +
+                    // "<div class='pic' style='" + plkFlag + "'>" +
+                    // "<a href='javascript: void(window.open(\"http://www.plurk.com/?qualifier=shares&status=\".concat(encodeURIComponent(\"" + data[i].caption + "\")).concat(\" \").concat(encodeURIComponent(\"" + appRoot + "/info/"  + data[i].cid + sidurl + "?lang=" + nowlang + "\"))));'><div class='plk'></div></a>" +
+                    // "</div>" +
+                    // "<div class='pic' style='" + twFlag + "'>" +
+                    // "<a href='javascript: void(window.open(\"http://twitter.com/home/?status=\".concat(encodeURIComponent(\"" + data[i].caption + "\")) .concat(\" \").concat(encodeURIComponent(\"" + appRoot + "/info/"  + data[i].cid + sidurl + "?lang=" + nowlang + "\"))));'><div class='tw'></div></a>" +
+                    // "</div>" +
+                    // "<div class='pic' style='" + lnFlag + "'>" +
+                    // "<a id='share-ln-"  + data[i].cid + "' href='#inline-ln-"  + data[i].cid + "' title='" + note + "'><div class='ln'></div></a>" +
+                    // "</div>" +
+                    // "<div class='pic' style='" + wctFlag + "'>" +
+                    // "<a id='share-wct-"  + data[i].cid + "' data-fancybox-type='iframe' href='" + data[i].qrcode_url + "' title='" + wechatsharenote + "'><div class='wct'></div></a>" + 
+                    // "</div>" +
+                    // "</div>" +
+                    /** Custom(E) By Steve **/
+                    "<div class='info font-gray'>" +
+                    "<i class='icon-lcms-classIng'></i>"+ video_dateTitle + data[i].create_datetime +
+                    "</div>" +
+                    "<div id='inline-ln-"  + data[i].cid + "' class='inline-ln'>" +
+                    "<form class='well'>" +
+                    "<div>" + linesharenote + "</div>" +
+                    "</form>" +
+                    "</div>" +
+                    "</div>" +
+                    "</li>";
+                }
+
+                $lcmsItems.html(html);
+                
+                // custom 固定顯示查看更多
+                if (isFromIndex == true) {
+                    $('.lcms-nav-bottom-video').html(fixButton);
+                }
+
+                // 調整版面
+                align = 'center';
+                if ((location.pathname === '/mooc/explorer.php') || (location.pathname === '/mooc/explorer_video.php')) {
+                    align = 'left';
+                }
+
+                var options = {
+                    autoResize: true, // This will auto-update the layout when the browser window is resized.
+                    container: $('#mainVideo'), // Optional, used for some extra CSS styling
+                    offset: 2, // Optional, the distance between grid items
+                    itemWidth: 250, // Optional, the width of a grid item
+                    align: align
+                };
+                if (!forMobile) {
+                    var handler = $('#mainVideo #tiles li');
+                    handler.wookmark(options);
+                }
+                
+                /** custom (B) By Steve -- 影片Fancybox關閉後,動態更新影片的觀看次數 20161019 **/
+                var $cur_video_id;  //取得目前點擊的影片ID(video_id)
+                $(".videoPlayerLink").fancybox({
+                    maxWidth: 800,
+                    maxHeight: 600,
+                    fitToView: false,
+                    width: 660,
+                    height: 600,
+                    autoSize: false,
+                    // closeClick: false,
+                    openEffect: 'none',
+                    // closeEffect: 'none',
+                    helpers : {
+                        overlay : {
+                            locked : false
+                        }
+                    },
+                    beforeClose: function() {
+                        updateVideoViewTimes($cur_video_id);
+                    }
+                }).click(function(){
+                    $cur_video_id = $(this).attr('data-video_id');
+                });
+                /** custom (E) By Steve **/
+            }
+        },
+        'error': function () {
+            if (window.console) {
+                console.log('Ajax Error!');
+            }
+        }
+    });
+}
+/** custom (B) By Steve -- 影片Fancybox關閉後,動態更新影片的觀看次數 20161019 **/
+function updateVideoViewTimes($cur_video_id){
+    $.ajax({
+        type: 'POST',
+        dataType: 'json',
+        data: {
+            action : 'getVideoViewTimes',
+            video_id : $cur_video_id
+        },
+        url: url,
+        success: function (response) {
+            $('#view_times_'+$cur_video_id).text(response.view_times);
+        }
+    });
+}
+/** custom (E) By Steve **/
