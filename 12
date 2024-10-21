@@ -1,0 +1,232 @@
+/html/body/div/div/div[2]/div[3]/div/table/tbody/tr[1]/td[1]/div/a
+
+獲取課程信息時發生錯誤: Message: 
+
+頁面源代碼:
+<html lang="" xmlns="http://www.w3.org/1999/xhtml" xmlns:og="http://ogp.me/ns#" xmlns:fb="http://www.facebook.com/2008/fbml" style="" class="js flexbox canvas canvastext webgl no-touch geolocation postmessage no-websqldatabase indexeddb hashchange history draganddrop websockets rgba hsla multiplebgs backgroundsize borderimage borderradius boxshadow textshadow opacity cssanimations csscolumns cssgradients cssreflections csstransforms csstransforms3d csstransitions fontface generatedcontent video audio localstorage sessionstorage webworkers no-applicationcache svg inlinesvg smil svgclippaths"><head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
+    <meta http-equiv="X-UA-Compatible" content="IE=10">
+    <!-- 把 charset 的 meta tag 調到最前面 -->
+
+    <!-- fb -->
+    <meta name="title" content="">
+    <meta name="description" property="og:description" content="">      
+    <meta property="og:title" content="">
+    <meta property="og:site_name" content="">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <link href="" rel="image_src" type="image/jpeg">
+    <!-- twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="">
+    <meta name="twitter:description" content="">
+    <meta name="twitter:url" content="">
+    <meta name="twitter:image:src" content="">
+
+    <title></title>
+    <link href="/theme/default/bootstrap/css/bootstrap.min.css?" rel="stylesheet">
+        <link href="/public/css/application.css?" rel="stylesheet">     
+    <link href="/theme/default/fancybox/jquery.fancybox.css" rel="stylesheet" type="text/css" media="screen">
+    <link rel="stylesheet" href="/lib/jquery/jquery.mSimpleSlidebox.css">
+    <link rel="icon" href="/base//door/tpl/icon.ico">
+    <link href="/public/css/common.css?" rel="stylesheet">
+                                    <link href="/public/css//index1.css?" rel="stylesheet">
+
+        <script type="text/javascript" src="/lib/modernizr/modernizr.min.js"></script>
+    <script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="/theme/default/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/theme/default/fancybox/jquery.fancybox.pack.js"></script>
+    <script type="text/javascript" src="/lib/jquery/jquery.mSimpleSlidebox.js"></script>
+    <script type="text/javascript" src="/public/js/third_party/jquery-placeholder/jquery.placeholder.js"></script>
+    <script type="text/javascript" src="/public/js/third_party/jquery-message-box/messagebox.min.js"></script>
+    <script type="text/javascript" src="/lib/jquery/jquery.cookie.js"></script>
+    <script type="text/javascript">
+        var appRoot = '',
+            generalDomain = '';
+    </script>
+    <style type="text/css">.fancybox-margin{margin-right:15px;}</style></head>
+<body><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="/theme/default/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+<link href="/lib/jquery/css/jquery-ui-1.8.22.custom.css" rel="stylesheet">
+<link href="/public/css/common.css" rel="stylesheet">
+<link href="/public/css/layout.css" rel="stylesheet">
+<link href="/public/css/component.css" rel="stylesheet">
+<link href="/public/css/settings.css" rel="stylesheet">
+<style type="text/css">
+    .t4>div>a{
+        white-space:normal !important;
+    }
+</style>
+<script type="text/javascript">
+        var MSG_NOW              = "即日起";
+    var MSG_FOREVER                      = "無限期";
+    var MSG_FROM2            = "從 ";
+    var MSG_TO2              = "到 ";
+    var MSG_FROM             = "從 ";
+    var MSG_TO               = "至 ";
+    var MSG_FAVORITE_SUCCESS = "已加入我的最愛";
+    var MSG_FAVORITE_FAIL    = "無法加入我的最愛";
+    var MSG_FAVORITE_EXIST   = "該課程已經存在";
+    var MSG_TARGET           = "請勾選要目的地群組。";
+    var MSG_SRC_COURSE       = "請勾選要動作的課程。";
+    var MSG_SYS_ERROR        = "JavaScript 執行發生一些錯誤，無法完成指 定的動作！";
+    var MSG_SEL_COURSE       = "請勾選欲加退選的課程。";
+    var MSG_SELECT_ALL       = "全選";
+    var MSG_SELECT_CANCEL    = "全消";
+
+    var MSG_CORRECT_DATE     = "請輸入正確日期(yyyy-mm-dd)，例如：2004-08-01";
+    var MSG_CORRECT_DATE1    = "月份介在01和12之間 ";
+    var MSG_CORRECT_DATE2    = "在一，三，五，七，八，十，十二月份日期介在01和31之間 ";
+    var MSG_CORRECT_DATE3    = "二月份日期必介在01和29之間 ";
+    var MSG_CORRECT_DATE4    = "二月份日期必介在01和28之間 ";
+    var MSG_CORRECT_DATE5    = "在四，六，九，十一月份 \n日期必介在01到30之間 ! ";
+    var MSG_ENROLL_DATE      = "";
+    var MSG_STUDY_DATE       = "";
+
+    var isTreeLoad = false;
+    var currTabId  = 1;
+    var ticket = "";
+
+    function defaultSort()
+    {
+        var obj = document.getElementById('actFm');
+        if ((typeof(obj) != "object") || (obj == null)) return false;   
+        obj.sortby.value = 'course_id';
+        obj.order.value = 'desc';
+        obj.submit();
+    }
+
+    if (parent == self) document.write('<p align=center><input type=button value=\"回首頁\" onclick=\"top.location.replace(\'/logout.php\');\" class=cssBtn></p>');
+
+
+</script>
+<script type="text/javascript" src="/public/js/common.js"></script>     
+<script type="text/javascript" src="index.js"></script>
+<div class="box1">
+    <div class="content" style="padding: 0;">
+        <div class="data6">
+            <div class="title">
+                <ul id="pager-switch" class="nav nav-tabs nav-orange">  
+                    <li class="active"><a href="#" onclick="chgTabs(1);return false;">課程教室</a></li>
+                                                        </ul>
+            </div>
+        </div>
+                                        <div class="box2">
+    <div class="content" style="padding:1em 2em 0em 2em">
+        <div class="data1">
+            <div class="content">
+                以下是您所修讀的課程，請點選課程名稱進入教室。
+            </div>
+        </div>
+    </div>
+    <div class="title-bar2" style="padding:0em 2em 0em 2em">
+        <div class="data2">
+            <table class="table subject">
+                <tbody>
+                    <tr>
+                        <td class="t4">
+                            <div class="text-left" style="margin-left: 0.5em;">
+                                <a href="javascript:;" onclick="sort_data('stud');return false;">課程名稱</a>
+                                                            </div>      
+                        </td>
+                        <td class="t5 hidden-phone">
+                            <div class="text-center">
+                                <a href="javascript:;" onclick="sort_data('stud');return false;">開始上課</a>
+                                                            </div>      
+                        </td>
+                        <td class="t5 hidden-tablet hidden-phone">      
+                            <div class="text-center">
+                                <a href="javascript:;" onclick="sort_data('audi');return false;">截止上課</a>
+                                                            </div>      
+                        </td>
+                        <td class="t3 hidden-tablet hidden-phone">      
+                            <div class="text-center" style="overflow: visible;">
+                                <a href="javascript:;" onclick="sort_data('login_times');return false;">新佈告</a>
+                                                            </div>      
+                        </td>
+                        <td class="t3">
+                            <div class="text-center">
+                                <a href="javascript:;" onclick="sort_data('post_times');return false;">未繳作業</a>
+                                                            </div>      
+                        </td>
+                        <td class="t3">
+                            <div class="text-center">
+                                <a href="javascript:;" onclick="sort_data('dsc_times');return false;">未寫考卷</a>
+                                                            </div>      
+                        </td>
+                        <td class="t3">
+                            <div class="text-center">
+                                <a href="javascript:;" onclick="sort_data('dsc_times');return false;">未填問卷</a>
+                                                            </div>      
+                        </td>
+                        <td class="t3 hidden-tablet hidden-phone">      
+                            <div class="text-right" style="margin-right: 0.5em;">身分</div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="content" style="padding:0em 2em 0em 2em">
+        <div class="data2">
+            <table class="table subject">
+                                <tbody><tr>
+                    <td class="t4">
+                        <div class="text-left" style="margin-left: 0.5em; word-break: break-all;"><a href="javascript:;" onclick="parent.chgCourse(10051418, 1, 1);return false;" class="cssAnchor">1131_人工智慧_電腦科學系(1131000701_COS4004)</a></div>
+                    </td>
+                    <td class="t5 hidden-phone">
+                        <div class="text-center">即日起</div>
+                    </td>
+                    <td class="t5 hidden-tablet hidden-phone">
+                        <div class="text-center">2025-02-01</div>       
+                    </td>
+                    <td class="t3 hidden-tablet hidden-phone">
+                        <div class="text-center">3</div>
+                    </td>
+                    <td class="t3">
+                        <div class="text-center"><a href="javascript:;" onclick="parent.chgCourse(10051418, 1, 1,'SYS_04_02_001');return false;" class="cssAnchor">0</a></div>
+                    </td>
+                    <td class="t3">
+                        <div class="text-center"><a href="javascript:;" onclick="parent.chgCourse(10051418, 1, 1,'SYS_04_02_002');return false;" class="cssAnchor">0</a></div>
+                    </td>
+                    <td class="t3">
+                        <div class="text-center"><a href="javascript:;" onclick="parent.chgCourse(10051418, 1, 1,'SYS_04_02_003');return false;" class="cssAnchor">0</a></div>
+                    </td>
+                    <td class="t3 hidden-tablet hidden-phone">
+                        <div class="text-right" style="margin-right: 0.5em; white-space: normal; overflow: visible;"><div>正式生</div></div>    
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="t4">
+                        <div class="text-left" style="margin-left: 0.5em; word-break: break-all;"><a href="javascript:;" onclick="parent.chgCourse(10051416, 1, 1);return false;" class="cssAnchor">1131_大數據分析程式 設計_電腦科學系(1131000698_COS3051)</a>
+Traceback (most recent call last):
+  File "c:\Users\User\Desktop\test2\web\webtest.py", line 72, in <module>
+    logout_button = WebDriverWait(wd, 10).until(EC.element_to_be_clickable((By.XPATH, "//a[contains(text(),'登出')]")))
+  File "C:\Users\User\AppData\Local\Programs\Python\Python310\lib\site-packages\selenium\webdriver\support\wait.py", line 105, in until
+    raise TimeoutException(message, screen, stacktrace)
+selenium.common.exceptions.TimeoutException: Message:
+Stacktrace:
+        GetHandleVerifier [0x00007FF6F382D095+12933]
+        Microsoft::Applications::Events::EventProperty::empty [0x00007FF6F3AEFE14+2285364]
+        Microsoft::Applications::Events::EventProperty::empty [0x00007FF6F3A2D7D6+1489142]
+        (No symbol) [0x00007FF6F361978E]
+        (No symbol) [0x00007FF6F3619896]
+        (No symbol) [0x00007FF6F36537D7]
+        (No symbol) [0x00007FF6F36384BF]
+        (No symbol) [0x00007FF6F36105A7]
+        (No symbol) [0x00007FF6F36513B1]
+        (No symbol) [0x00007FF6F36380E3]
+        (No symbol) [0x00007FF6F360FAE4]
+        (No symbol) [0x00007FF6F360EF90]
+        (No symbol) [0x00007FF6F360F6D1]
+        Microsoft::Applications::Events::EventProperty::empty [0x00007FF6F39C4764+1058948]
+        Microsoft::Applications::Events::EventProperty::~EventProperty [0x00007FF6F37366B4+56500]
+        Microsoft::Applications::Events::EventProperty::empty [0x00007FF6F39C3763+1054851]
+        Microsoft::Applications::Events::EventProperty::empty [0x00007FF6F39C33C9+1053929]
+        Microsoft::Applications::Events::ILogConfiguration::operator* [0x00007FF6F37C39E1+428481]
+        Microsoft::Applications::Events::ILogConfiguration::operator* [0x00007FF6F37BFC94+412788]
+        Microsoft::Applications::Events::ILogConfiguration::operator* [0x00007FF6F37BFDD9+413113]
+        Microsoft::Applications::Events::ILogConfiguration::operator* [0x00007FF6F37B5A06+371174]
+        BaseThreadInitThunk [0x00007FFC4F75257D+29]
+        RtlUserThreadStart [0x00007FFC4F98AF08+40]
